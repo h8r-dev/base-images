@@ -54,7 +54,7 @@ RUN ARCH= && dpkgArch="$(dpkg --print-architecture)" \
     *) echo "unsupported architecture"; exit 1 ;; \
   esac \
   && curl -fsSLO --compressed "https://github.com/cli/cli/releases/download/v$GH_VERSION/gh_${GH_VERSION}_linux_$ARCH.tar.gz" \
-  && curl -fsSLO "https://github.com/cli/cli/releases/download/v2.8.0/gh_${GH_VERSION}_checksums.txt" \
+  && curl -fsSLO "https://github.com/cli/cli/releases/download/v$GH_VERSION/gh_${GH_VERSION}_checksums.txt" \
   && grep " gh_${GH_VERSION}_linux_$ARCH.tar.gz\$" "gh_${GH_VERSION}_checksums.txt" | sha256sum -c - \
   && tar -xzf "gh_${GH_VERSION}_linux_$ARCH.tar.gz" --no-same-owner \
   && mv "gh_${GH_VERSION}_linux_$ARCH/bin/gh" /usr/local/bin/gh \
