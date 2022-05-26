@@ -71,10 +71,10 @@ RUN ARCH= && dpkgArch="$(dpkg --print-architecture)" \
     *) echo "unsupported architecture"; exit 1 ;; \
   esac \
   && curl -fsSL --compressed "https://github.com/argoproj/argo-cd/releases/download/v$ARGOCD_VERSION/argocd-linux-$ARCH" -o /usr/local/bin/argocd \
-  && curl -fsSLO --compressed "https://github.com/argoproj/argo-cd/releases/download/v$ARGOCD_VERSION/argocd-linux-$ARCH.sha256" \
-  && echo "$(cat argocd-linux-$ARCH.sha256) /usr/local/bin/argocd" | sha256sum -c - \
+  # && curl -fsSLO --compressed "https://github.com/argoproj/argo-cd/releases/download/v$ARGOCD_VERSION/argocd-linux-$ARCH.sha256" \
+  # && echo "$(cat argocd-linux-$ARCH.sha256) /usr/local/bin/argocd" | sha256sum -c - \
   && chmod +x /usr/local/bin/argocd \
-  && rm argocd-linux-$ARCH.sha256 \
+  # && rm argocd-linux-$ARCH.sha256 \
   && argocd version
 
 # install kubectl
