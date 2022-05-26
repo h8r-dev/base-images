@@ -14,8 +14,8 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - name: debain
-            dockerfile: ./debain/Dockerfile
+          - name: debian
+            dockerfile: ./debian/Dockerfile
     runs-on: ubuntu-latest
     steps:
       - name: Checkout

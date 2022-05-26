@@ -23,12 +23,13 @@ RUN ARCH= && dpkgArch="$(dpkg --print-architecture)" \
     arm64) ARCH='arm64';; \
     *) echo "unsupported architecture"; exit 1 ;; \
   esac \
-  && curl -fsSL --compressed "https://github.com/mikefarah/yq/releases/download/v$ARGOCD_VERSION/yq_linux_${ARCH}" -o /usr/local/bin/yq \
-  && curl -fsSLO --compressed "https://github.com/mikefarah/yq/releases/download/v$ARGOCD_VERSION/checksums" \
-  && echo "$(<checksums awk '{print$5}') /usr/local/bin/yq"  | sha256sum -c - \
+  && curl -fsSL --compressed "https://github.com/mikefarah/yq/releases/download/v$YQ_VERSION/yq_linux_${ARCH}" -o /usr/local/bin/yq \
+  && curl -fsSLO --compressed "https://github.com/mikefarah/yq/releases/download/v$YQ_VERSION/checksums" \
+  && echo "$(<checksums grep yq_linux_${ARCH} | grep -v tar.gz | awk '{print$19}') /usr/local/bin/yq" | sha256sum -c - \
   && chmod +x /usr/local/bin/yq \
   && rm checksums \
   && yq --version
+
 # install terraform
 ENV TF_VERSION 1.1.9
 RUN ARCH= && dpkgArch="$(dpkg --print-architecture)" \
@@ -52,12 +53,12 @@ RUN ARCH= && dpkgArch="$(dpkg --print-architecture)" \
     arm64) ARCH='arm64';; \
     *) echo "unsupported architecture"; exit 1 ;; \
   esac \
-  && curl -fsSLO --compressed "https://github.com/cli/cli/releases/download/v$GH_VERSION/gh_${$GH_VERSION}_linux_$ARCH.tar.gz" \
-  && curl -fsSLO "https://github.com/cli/cli/releases/download/v2.8.0/gh_${$GH_VERSION}_checksums.txt" \
-  && grep " gh_${$GH_VERSION}_linux_$ARCH.tar.gz\$" "gh_${$GH_VERSION}_checksums.txt" | sha256sum -c - \
-  && tar -xzf "gh_${$GH_VERSION}_linux_$ARCH.tar.gz" --no-same-owner \
-  && mv "gh_${$GH_VERSION}_linux_$ARCH/bin/gh" /usr/local/bin/gh \
-  && rm "gh_${$GH_VERSION}_linux_$ARCH.tar.gz" \
+  && curl -fsSLO --compressed "https://github.com/cli/cli/releases/download/v$GH_VERSION/gh_${GH_VERSION}_linux_$ARCH.tar.gz" \
+  && curl -fsSLO "https://github.com/cli/cli/releases/download/v2.8.0/gh_${GH_VERSION}_checksums.txt" \
+  && grep " gh_${GH_VERSION}_linux_$ARCH.tar.gz\$" "gh_${GH_VERSION}_checksums.txt" | sha256sum -c - \
+  && tar -xzf "gh_${GH_VERSION}_linux_$ARCH.tar.gz" --no-same-owner \
+  && mv "gh_${GH_VERSION}_linux_$ARCH/bin/gh" /usr/local/bin/gh \
+  && rm "gh_${GH_VERSION}_linux_$ARCH.tar.gz" \
   && rm -rf $GH_VERSION_linux_$ARCH \
   && gh version
 
@@ -104,7 +105,7 @@ RUN ARCH= && dpkgArch="$(dpkg --print-architecture)" \
   && grep " helm-v$HELM_VERSION-linux-$ARCH.tar.gz\$" "helm-v$HELM_VERSION-linux-$ARCH.tar.gz.sha256sum" | sha256sum -c - \
   && tar -xzf "helm-v$HELM_VERSION-linux-$ARCH.tar.gz" --no-same-owner \
   && mv "linux_$ARCH/helm" /usr/local/bin/helm \
-  && rm "gh_${$GH_VERSION}_linux_$ARCH.tar.gz" \
+  && rm "helm-v$HELM_VERSION-linux-$ARCH.tar.gz" \
   && rm -rf "linux_$ARCH/helm" \
   && helm version
 
