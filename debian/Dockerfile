@@ -42,7 +42,7 @@ RUN ARCH= && dpkgArch="$(dpkg --print-architecture)" \
   && curl -fsSLO "https://releases.hashicorp.com/terraform/$TF_VERSION/terraform_${TF_VERSION}_SHA256SUMS" \
   && grep " terraform_${TF_VERSION}_linux_$ARCH.zip\$" "terraform_${TF_VERSION}_SHA256SUMS" | sha256sum -c - \
   && unzip -d /usr/local/bin "terraform_${TF_VERSION}_linux_$ARCH.zip" \
-  && rm "terraform_${TF_VERSION}_linux_$ARCH.zip" \
+  && rm "terraform_${TF_VERSION}_linux_$ARCH.zip" "terraform_${TF_VERSION}_SHA256SUMS" \
   && terraform version
 
 # install github-cli
@@ -58,8 +58,8 @@ RUN ARCH= && dpkgArch="$(dpkg --print-architecture)" \
   && grep " gh_${GH_VERSION}_linux_$ARCH.tar.gz\$" "gh_${GH_VERSION}_checksums.txt" | sha256sum -c - \
   && tar -xzf "gh_${GH_VERSION}_linux_$ARCH.tar.gz" --no-same-owner \
   && mv "gh_${GH_VERSION}_linux_$ARCH/bin/gh" /usr/local/bin/gh \
-  && rm "gh_${GH_VERSION}_linux_$ARCH.tar.gz" \
-  && rm -rf $GH_VERSION_linux_$ARCH \
+  && rm "gh_${GH_VERSION}_linux_$ARCH.tar.gz" "gh_${GH_VERSION}_checksums.txt" \
+  && rm -rf "gh_${GH_VERSION}_linux_$ARCH" \
   && gh version
 
 # argocd cli
@@ -90,7 +90,7 @@ RUN ARCH= && dpkgArch="$(dpkg --print-architecture)" \
   && echo "$(cat kubectl.sha256) /usr/local/bin/kubectl" | sha256sum -c - \
   && chmod +x /usr/local/bin/kubectl \
   && rm kubectl.sha256 \
-  && kubectl version --client \
+  && kubectl version --client
 
 # install helm
 ENV HELM_VERSION 3.9.0
@@ -105,8 +105,8 @@ RUN ARCH= && dpkgArch="$(dpkg --print-architecture)" \
   && grep " helm-v$HELM_VERSION-linux-$ARCH.tar.gz\$" "helm-v$HELM_VERSION-linux-$ARCH.tar.gz.sha256sum" | sha256sum -c - \
   && tar -xzf "helm-v$HELM_VERSION-linux-$ARCH.tar.gz" --no-same-owner \
   && mv "linux-$ARCH/helm" /usr/local/bin/helm \
-  && rm "helm-v$HELM_VERSION-linux-$ARCH.tar.gz" \
-  && rm -rf "linux-$ARCH/helm" \
+  && rm "helm-v$HELM_VERSION-linux-$ARCH.tar.gz" "helm-v$HELM_VERSION-linux-$ARCH.tar.gz.sha256sum" \
+  && rm -rf "linux-$ARCH" \
   && helm version
 
 # install nodejs
@@ -121,7 +121,7 @@ RUN ARCH= && dpkgArch="$(dpkg --print-architecture)" \
   && curl -fsSLO --compressed "https://nodejs.org/dist/v$NODE_VERSION/SHASUMS256.txt" \
   && grep " node-v$NODE_VERSION-linux-$ARCH.tar.xz\$" SHASUMS256.txt | sha256sum -c - \
   && tar -xJf "node-v$NODE_VERSION-linux-$ARCH.tar.xz" -C /usr/local --strip-components=1 --no-same-owner \
-  && rm "node-v$NODE_VERSION-linux-$ARCH.tar.xz" SHASUMS256.txt.asc SHASUMS256.txt \
+  && rm "node-v$NODE_VERSION-linux-$ARCH.tar.xz" SHASUMS256.txt \
   && ln -s /usr/local/bin/node /usr/local/bin/nodejs \
   && node --version \
   && npm --version \
