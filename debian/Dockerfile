@@ -75,7 +75,7 @@ RUN ARCH= && dpkgArch="$(dpkg --print-architecture)" \
   # && echo "$(cat argocd-linux-$ARCH.sha256) /usr/local/bin/argocd" | sha256sum -c - \
   && chmod +x /usr/local/bin/argocd \
   # && rm argocd-linux-$ARCH.sha256 \
-  && argocd version
+  && argocd version --client
 
 # install kubectl
 ENV KUBECTL_VERSION 1.23.7
