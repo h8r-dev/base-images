@@ -104,9 +104,9 @@ RUN ARCH= && dpkgArch="$(dpkg --print-architecture)" \
   && curl -fsSLO --compressed "https://get.helm.sh/helm-v$HELM_VERSION-linux-$ARCH.tar.gz.sha256sum" \
   && grep " helm-v$HELM_VERSION-linux-$ARCH.tar.gz\$" "helm-v$HELM_VERSION-linux-$ARCH.tar.gz.sha256sum" | sha256sum -c - \
   && tar -xzf "helm-v$HELM_VERSION-linux-$ARCH.tar.gz" --no-same-owner \
-  && mv "linux_$ARCH/helm" /usr/local/bin/helm \
+  && mv "linux-$ARCH/helm" /usr/local/bin/helm \
   && rm "helm-v$HELM_VERSION-linux-$ARCH.tar.gz" \
-  && rm -rf "linux_$ARCH/helm" \
+  && rm -rf "linux-$ARCH/helm" \
   && helm version
 
 # install nodejs
@@ -118,7 +118,7 @@ RUN ARCH= && dpkgArch="$(dpkg --print-architecture)" \
     *) echo "unsupported architecture"; exit 1 ;; \
   esac \
   && curl -fsSLO --compressed "https://nodejs.org/dist/v$NODE_VERSION/node-v$NODE_VERSION-linux-$ARCH.tar.xz" \
-  && curl -fsSLO --compressed "https://nodejs.org/dist/v16.15.0/SHASUMS256.txt" \
+  && curl -fsSLO --compressed "https://nodejs.org/dist/v$NODE_VERSION/SHASUMS256.txt" \
   && grep " node-v$NODE_VERSION-linux-$ARCH.tar.xz\$" SHASUMS256.txt | sha256sum -c - \
   && tar -xJf "node-v$NODE_VERSION-linux-$ARCH.tar.xz" -C /usr/local --strip-components=1 --no-same-owner \
   && rm "node-v$NODE_VERSION-linux-$ARCH.tar.xz" SHASUMS256.txt.asc SHASUMS256.txt \
