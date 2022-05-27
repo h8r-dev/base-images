@@ -109,6 +109,24 @@ RUN ARCH= && dpkgArch="$(dpkg --print-architecture)" \
   && rm -rf "linux-$ARCH" \
   && helm version
 
+# install kubeseal
+ENV KUBESECAL_VERSION 0.17.5
+RUN ARCH= && dpkgArch="$(dpkg --print-architecture)" \
+  && case "${dpkgArch##*-}" in \
+    amd64) ARCH='amd64';; \
+    arm64) ARCH='arm64';; \
+    *) echo "unsupported architecture"; exit 1 ;; \
+  esac \
+  && mkdir kubeseal-tmp \
+  && curl -fsSLO --compressed "https://github.com/bitnami-labs/sealed-secrets/releases/download/v${KUBESECAL_VERSION}/kubeseal-${KUBESECAL_VERSION}-linux-${ARCH}.tar.gz" \
+  && curl -fsSLO --compressed "https://github.com/bitnami-labs/sealed-secrets/releases/download/v${KUBESECAL_VERSION}/sealed-secrets_${KUBESECAL_VERSION}_checksums.txt" \
+  && grep " kubeseal-${KUBESECAL_VERSION}-linux-${ARCH}.tar.gz\$" "sealed-secrets_${KUBESECAL_VERSION}_checksums.txt" | sha256sum -c - \
+  && tar zxf "kubeseal-${KUBESECAL_VERSION}-linux-${ARCH}.tar.gz" -C kubeseal-tmp \
+  && mv kubeseal-tmp/kubeseal /usr/local/bin/kubeseal \
+  && rm "kubeseal-${KUBESECAL_VERSION}-linux-${ARCH}.tar.gz" "sealed-secrets_${KUBESECAL_VERSION}_checksums.txt" \
+  && rm -rf kubeseal-tmp \
+  && kubeseal --version
+
 # install nodejs
 ENV NODE_VERSION 16.15.0
 RUN ARCH= && dpkgArch="$(dpkg --print-architecture)" \
