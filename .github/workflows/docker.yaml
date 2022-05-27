@@ -37,13 +37,10 @@ jobs:
 
       - name: Build and push to GitHub Container Registry
         uses: docker/build-push-action@v3
-        env:
-          NAME: "stack-base"
-          TAG: "${{ matrix.name }}"
         with:
           context: .
           platforms: linux/amd64,linux/arm64
           file: ${{ matrix.dockerfile }}
           push: ${{ github.event_name != 'pull_request' }}
           tags: |
-            ghcr.io/${{ github.repository }}/$NAME:$TAG
+            ghcr.io/${{ github.repository }}/stack-base:${{ matrix.name }}
