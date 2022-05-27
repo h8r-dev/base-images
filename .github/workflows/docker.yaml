@@ -42,6 +42,21 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
+      - name: Docker meta
+        id: meta
+        uses: docker/metadata-action@v4
+        with:
+          images: |
+            ghcr.io/${{ github.repository }}/stack-base
+            heighlinerdev/stack-base
+          tags: |
+            type=ref,event=branch
+            type=ref,event=pr
+            type=semver,pattern={{version}}
+            type=semver,pattern={{major}}.{{minor}}
+            type=raw,value=${{ matrix.name }}
+            type=sha,format=long
+
       - name: Build and push to GitHub Container Registry
         uses: docker/build-push-action@v3
         with:
@@ -49,6 +64,5 @@ jobs:
           platforms: linux/amd64,linux/arm64
           file: ${{ matrix.dockerfile }}
           push: ${{ github.event_name != 'pull_request' }}
-          tags: |
-            ghcr.io/${{ github.repository }}/stack-base:${{ matrix.name }}
-            heighlinerdev/stack-base:${{ matrix.name }}
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
