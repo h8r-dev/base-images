@@ -146,3 +146,15 @@ RUN ARCH= && dpkgArch="$(dpkg --print-architecture)" \
   && npm install -g yarn \
   && npm install -g @vue/cli \
   && npm cache clean --force
+
+# install nodejs
+ENV GOMPLATE_VERSION 3.11.1
+RUN ARCH= && dpkgArch="$(dpkg --print-architecture)" \
+  && case "${dpkgArch##*-}" in \
+    amd64) ARCH='amd64';; \
+    arm64) ARCH='arm64';; \
+    *) echo "unsupported architecture"; exit 1 ;; \
+  esac \
+  && curl -fsSLO --compressed https://github.com/hairyhenderson/gomplate/releases/download/v${GOMPLATE_VERSION}/gomplate_linux-${ARCH} \
+  && mv gomplate_linux-${ARCH} /usr/local/bin/gomplate \
+  && chmod +x /usr/local/bin/gomplate
